@@ -45,10 +45,11 @@ def register(request):
 
 def send_verification_email(user, token):
     subject = 'Welcome to BoliBazaar - Verify Your Account'
+    site_url = getattr(settings, 'SITE_URL', 'http://localhost:8000')
     html_message = render_to_string('emails/verification_email.html', {
         'user': user,
         'token': token,
-        'domain': 'localhost:8000'
+        'domain': site_url.replace('http://', '').replace('https://', '')
     })
     plain_message = strip_tags(html_message)
     
@@ -642,10 +643,11 @@ def reset_password(request, token):
 
 def send_password_reset_email(user, token):
     subject = 'Reset Your BoliBazaar Password'
+    site_url = getattr(settings, 'SITE_URL', 'http://localhost:8000')
     html_message = render_to_string('emails/password_reset.html', {
         'user': user,
         'token': token,
-        'domain': 'localhost:8000'
+        'domain': site_url.replace('http://', '').replace('https://', '')
     })
     plain_message = strip_tags(html_message)
     

@@ -105,6 +105,9 @@ EMAIL_HOST_USER = 'sanatanisofindia@gmail.com'
 EMAIL_HOST_PASSWORD = 'hjdy ppcu yzbs qubd'
 DEFAULT_FROM_EMAIL = 'BoliBazaar <sanatanisofindia@gmail.com>'
 
+# Site URL for emails
+SITE_URL = 'https://bolibazaar.onrender.com'
+
 # Account activation
 ACCOUNT_ACTIVATION_DAYS = 7
 
