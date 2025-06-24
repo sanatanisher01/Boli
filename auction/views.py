@@ -31,8 +31,9 @@ def register(request):
             user.is_active = False
             user.save()
             
-            # Create user profile
+            # Create user profile with unique ID
             profile = UserProfile.objects.create(user=user)
+            profile.generate_unique_id()
             
             # Send verification email
             send_verification_email(user, profile.activation_token)
@@ -588,11 +589,18 @@ def profile(request):
     profile, created = UserProfile.objects.get_or_create(user=request.user)
     
     if request.method == 'POST':
-        form = UserProfileForm(request.POST, request.FILES, instance=profile)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Profile updated successfully!')
+        if 'generate_id' in request.POST:
+            # Generate unique ID
+            profile.generate_unique_id()
+            messages.success(request, 'Unique ID generated and sent to your email!')
             return redirect('profile')
+        else:
+            # Regular profile update
+            form = UserProfileForm(request.POST, request.FILES, instance=profile)
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Profile updated successfully!')
+                return redirect('profile')
     else:
         form = UserProfileForm(instance=profile)
     

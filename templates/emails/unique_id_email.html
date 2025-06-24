@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your BoliBazaar Unique ID</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+        .header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        .unique-id-box {
+            background: #f8f9fa;
+            border: 2px dashed #667eea;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            margin: 30px 0;
+        }
+        .unique-id {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #764ba2;
+            letter-spacing: 5px;
+        }
+        .footer {
+            background: #2c3e50;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 BoliBazaar</h1>
+            <p>Your Unique ID is Ready!</p>
+        </div>
+        
+        <div class="content">
+            <h2>Hello {{ user.first_name|default:user.username }}!</h2>
+            <p>Your BoliBazaar unique ID has been generated. This ID will be used for voice authentication and other personalized features.</p>
+            
+            <div class="unique-id-box">
+                <p>Your Unique ID is:</p>
+                <div class="unique-id">{{ unique_id }}</div>
+                <p>Keep this ID secure and don't share it with others.</p>
+            </div>
+            
+            <p><strong>What can you do with this ID?</strong></p>
+            <ul>
+                <li>Use it for voice authentication with OmniDimension</li>
+                <li>Quick login to your account</li>
+                <li>Access personalized voice features</li>
+            </ul>
+            
+            <p>Thank you for being part of BoliBazaar!</p>
+        </div>
+        
+        <div class="footer">
+            <p><strong>BoliBazaar Team</strong></p>
+            <p>The Future of Auctions is Here</p>
+            <p style="font-size: 0.9rem;">© 2024 BoliBazaar. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
