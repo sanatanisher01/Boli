@@ -293,8 +293,8 @@ def voice_authenticate(request):
             return JsonResponse({
                 'success': True,
                 'action': 'auto_login',
-                'username': 'admin',
-                'password': 'admin123',
+                'username': 'admin6397664902',
+                'password': 'Aryan@010',
                 'message': 'Logging in as admin'
             })
         elif action == 'logout':

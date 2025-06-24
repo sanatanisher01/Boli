@@ -3,6 +3,22 @@
 {% block title %}Login - BoliBazaar{% endblock %}
 
 {% block content %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const togglePassword = document.querySelector('#togglePassword');
+        const password = document.querySelector('#id_password');
+        
+        togglePassword.addEventListener('click', function() {
+            // Toggle the type attribute
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            
+            // Toggle the icon
+            this.querySelector('i').classList.toggle('fa-eye');
+            this.querySelector('i').classList.toggle('fa-eye-slash');
+        });
+    });
+</script>
 <div class="row justify-content-center">
     <div class="col-md-6">
         <div class="card border-0 glass-effect">
@@ -24,7 +40,12 @@
                     
                     <div class="mb-3">
                         <label for="id_password" class="form-label">Password</label>
-                        <input type="password" class="form-control" name="password" id="id_password" required>
+                        <div class="input-group">
+                            <input type="password" class="form-control" name="password" id="id_password" required>
+                            <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
                     </div>
                     
                     {% if form.errors %}
@@ -50,8 +71,7 @@
                 <div class="text-center mt-4">
                     <div class="glass-effect rounded-3 p-3">
                         <small class="text-muted">
-                            <div class="fw-semibold mb-2">Demo Accounts:</div>
-                            <div><strong>Admin:</strong> admin / admin123</div>
+                            <div class="fw-semibold mb-2">Demo Account:</div>
                             <div><strong>User:</strong> demo / demo123</div>
                         </small>
                     </div>
