@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to BoliBazaar!</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+        .header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+            font-size: 1.2rem;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        .welcome-text {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            text-align: center;
+        }
+        .start-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin: 20px 0;
+            transition: transform 0.3s ease;
+        }
+        .start-btn:hover {
+            transform: translateY(-2px);
+        }
+        .tips {
+            background: #f8f9fa;
+            padding: 30px;
+            margin: 30px 0;
+            border-radius: 15px;
+        }
+        .tip {
+            display: flex;
+            align-items: flex-start;
+            margin: 20px 0;
+        }
+        .tip-number {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        .voice-commands {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+        .command {
+            background: rgba(255,255,255,0.1);
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+        .footer {
+            background: #2c3e50;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .footer p {
+            margin: 5px 0;
+            opacity: 0.8;
+        }
+        .celebration {
+            text-align: center;
+            font-size: 3rem;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎉 Welcome!</h1>
+            <p>You're now part of BoliBazaar family</p>
+        </div>
+        
+        <div class="content">
+            <div class="celebration">🎊 🎯 🎊</div>
+            
+            <div class="welcome-text">
+                <h2>Congratulations {{ user.first_name|default:user.username }}!</h2>
+                <p>Your email has been verified successfully. You can now start bidding on amazing products!</p>
+            </div>
+            
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="http://localhost:8000/" class="start-btn">
+                    🚀 Start Bidding Now
+                </a>
+            </div>
+            
+            <div class="tips">
+                <h3 style="color: #2c3e50; margin-bottom: 20px;">💡 Quick Start Guide:</h3>
+                
+                <div class="tip">
+                    <div class="tip-number">1</div>
+                    <div>
+                        <strong>Browse Products</strong><br>
+                        <small>Explore our homepage to see all active auctions with live countdown timers</small>
+                    </div>
+                </div>
+                
+                <div class="tip">
+                    <div class="tip-number">2</div>
+                    <div>
+                        <strong>Place Your First Bid</strong><br>
+                        <small>Click on any product to view details and place your bid manually or using voice</small>
+                    </div>
+                </div>
+                
+                <div class="tip">
+                    <div class="tip-number">3</div>
+                    <div>
+                        <strong>Track Your Bids</strong><br>
+                        <small>Visit your dashboard to monitor all your bids and see if you're winning</small>
+                    </div>
+                </div>
+                
+                <div class="tip">
+                    <div class="tip-number">4</div>
+                    <div>
+                        <strong>Use Voice Commands</strong><br>
+                        <small>Click the microphone button and speak naturally to place bids</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="voice-commands">
+                <h3 style="margin-top: 0;">🎤 Voice Commands You Can Use:</h3>
+                <div class="command">"What is the current bid?"</div>
+                <div class="command">"Place a bid of 5000 rupees"</div>
+                <div class="command">"Place a bid of 7500 rupees on this product"</div>
+                <p style="margin-bottom: 0; opacity: 0.9;">
+                    <small>💡 Tip: Speak clearly and wait for the confirmation message</small>
+                </p>
+            </div>
+            
+            <div style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                <h4 style="color: #856404; margin-top: 0;">🏆 Pro Tips for Winning:</h4>
+                <ul style="color: #856404; margin-bottom: 0;">
+                    <li>Set up notifications to track your favorite auctions</li>
+                    <li>Bid strategically - don't reveal your maximum too early</li>
+                    <li>Use voice commands for faster bidding in final moments</li>
+                    <li>Check the leaderboard to see your competition</li>
+                </ul>
+            </div>
+            
+            <p style="text-align: center; margin-top: 30px;">
+                <strong>Happy Bidding! 🎯</strong><br>
+                <small>If you need any help, just reply to this email.</small>
+            </p>
+        </div>
+        
+        <div class="footer">
+            <p><strong>BoliBazaar Team</strong></p>
+            <p>Where Every Bid Counts</p>
+            <p style="font-size: 0.9rem;">© 2024 BoliBazaar. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

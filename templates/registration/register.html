@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+
+{% block title %}Register - BoliBazaar{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card border-0 glass-effect">
+            <div class="card-header border-0 text-center py-4" style="background: var(--success-gradient); border-radius: 20px 20px 0 0;">
+                <div class="mb-3">
+                    <i class="fas fa-user-plus fa-3x text-white"></i>
+                </div>
+                <h3 class="text-white fw-bold mb-0">Join BoliBazaar</h3>
+                <p class="text-white opacity-75 mb-0">Start your bidding journey today</p>
+            </div>
+            <div class="card-body p-5">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-4">
+                        <label for="{{ form.username.id_for_label }}" class="form-label fw-semibold">
+                            <i class="fas fa-user me-2 text-primary"></i>Username
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-transparent border-end-0">
+                                <i class="fas fa-at text-muted"></i>
+                            </span>
+                            <input type="text" class="form-control border-start-0 ps-0" name="username" id="id_username" placeholder="Choose a unique username" required>
+                        </div>
+                        {% if form.username.errors %}
+                            <div class="text-danger mt-2"><i class="fas fa-exclamation-circle me-1"></i>{{ form.username.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label for="{{ form.first_name.id_for_label }}" class="form-label fw-semibold">
+                                <i class="fas fa-user-circle me-2 text-primary"></i>First Name
+                            </label>
+                            <input type="text" class="form-control" name="first_name" id="id_first_name" placeholder="Your first name" required>
+                            {% if form.first_name.errors %}
+                                <div class="text-danger mt-2"><i class="fas fa-exclamation-circle me-1"></i>{{ form.first_name.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label for="{{ form.last_name.id_for_label }}" class="form-label fw-semibold">
+                                <i class="fas fa-user-circle me-2 text-primary"></i>Last Name
+                            </label>
+                            <input type="text" class="form-control" name="last_name" id="id_last_name" placeholder="Your last name" required>
+                            {% if form.last_name.errors %}
+                                <div class="text-danger mt-2"><i class="fas fa-exclamation-circle me-1"></i>{{ form.last_name.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="{{ form.email.id_for_label }}" class="form-label fw-semibold">
+                            <i class="fas fa-envelope me-2 text-primary"></i>Email Address
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-transparent border-end-0">
+                                <i class="fas fa-envelope text-muted"></i>
+                            </span>
+                            <input type="email" class="form-control border-start-0 ps-0" name="email" id="id_email" placeholder="your.email@example.com" required>
+                        </div>
+                        {% if form.email.errors %}
+                            <div class="text-danger mt-2"><i class="fas fa-exclamation-circle me-1"></i>{{ form.email.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="{{ form.password1.id_for_label }}" class="form-label fw-semibold">
+                            <i class="fas fa-lock me-2 text-primary"></i>Password
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-transparent border-end-0">
+                                <i class="fas fa-key text-muted"></i>
+                            </span>
+                            <input type="password" class="form-control border-start-0 ps-0" name="password1" id="id_password1" placeholder="Create a strong password" required>
+                        </div>
+                        <div class="form-text mt-2">
+                            <i class="fas fa-info-circle text-primary me-1"></i>
+                            Password must be at least 8 characters long
+                        </div>
+                        {% if form.password1.errors %}
+                            <div class="text-danger mt-2"><i class="fas fa-exclamation-circle me-1"></i>{{ form.password1.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="{{ form.password2.id_for_label }}" class="form-label fw-semibold">
+                            <i class="fas fa-lock me-2 text-primary"></i>Confirm Password
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-transparent border-end-0">
+                                <i class="fas fa-check-circle text-muted"></i>
+                            </span>
+                            <input type="password" class="form-control border-start-0 ps-0" name="password2" id="id_password2" placeholder="Confirm your password" required>
+                        </div>
+                        {% if form.password2.errors %}
+                            <div class="text-danger mt-2"><i class="fas fa-exclamation-circle me-1"></i>{{ form.password2.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <button type="submit" class="btn btn-success w-100 py-3 fw-semibold">
+                        <i class="fas fa-user-plus me-2"></i>Create My Account
+                    </button>
+                </form>
+                
+                <div class="text-center mt-4">
+                    <p class="text-muted">Already have an account? 
+                        <a href="{% url 'login' %}" class="text-primary fw-semibold text-decoration-none">Login here</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.form-control, .input-group-text {
+    border-radius: 12px;
+    border: 2px solid rgba(102, 126, 234, 0.2);
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    transform: translateY(-2px);
+}
+
+.input-group-text {
+    background: rgba(102, 126, 234, 0.05);
+    border-right: none;
+}
+
+.form-control.border-start-0 {
+    border-left: none;
+}
+
+.form-label {
+    color: #2c3e50;
+    margin-bottom: 8px;
+}
+
+.card {
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    border: none;
+    font-weight: 600;
+    padding: 12px 24px;
+    transition: all 0.3s ease;
+}
+
+.btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(67, 233, 123, 0.4);
+}
+</style>
+{% endblock %}

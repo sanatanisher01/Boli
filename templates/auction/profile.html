@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+
+{% block title %}My Profile - BoliBazaar{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card border-0 glass-effect">
+            <div class="card-header border-0 text-center py-4" style="background: var(--primary-gradient); border-radius: 20px 20px 0 0;">
+                <div class="mb-3">
+                    {% if profile.profile_picture %}
+                        <img src="{{ profile.profile_picture.url }}" alt="Profile" class="rounded-circle" style="width: 80px; height: 80px; object-fit: cover;">
+                    {% else %}
+                        <i class="fas fa-user-circle fa-5x text-white"></i>
+                    {% endif %}
+                </div>
+                <h3 class="text-white fw-bold mb-0">My Profile</h3>
+                <p class="text-white opacity-75 mb-0">Manage your account settings</p>
+            </div>
+            <div class="card-body p-5">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label for="{{ form.first_name.id_for_label }}" class="form-label fw-semibold">
+                                <i class="fas fa-user me-2 text-primary"></i>First Name
+                            </label>
+                            <input type="text" class="form-control" name="first_name" id="id_first_name" value="{{ form.first_name.value|default:'' }}" placeholder="Your first name">
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label for="{{ form.last_name.id_for_label }}" class="form-label fw-semibold">
+                                <i class="fas fa-user me-2 text-primary"></i>Last Name
+                            </label>
+                            <input type="text" class="form-control" name="last_name" id="id_last_name" value="{{ form.last_name.value|default:'' }}" placeholder="Your last name">
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="{{ form.email.id_for_label }}" class="form-label fw-semibold">
+                            <i class="fas fa-envelope me-2 text-primary"></i>Email Address
+                        </label>
+                        <input type="email" class="form-control" name="email" id="id_email" value="{{ form.email.value|default:'' }}" placeholder="your.email@example.com" required>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="{{ form.phone.id_for_label }}" class="form-label fw-semibold">
+                            <i class="fas fa-phone me-2 text-primary"></i>Phone Number
+                        </label>
+                        <input type="text" class="form-control" name="phone" id="id_phone" value="{{ form.phone.value|default:'' }}" placeholder="+91 12345 67890">
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="{{ form.profile_picture.id_for_label }}" class="form-label fw-semibold">
+                            <i class="fas fa-camera me-2 text-primary"></i>Profile Picture
+                        </label>
+                        <div class="upload-area border-2 border-dashed rounded-3 p-4 text-center" style="border-color: #dee2e6;">
+                            <input type="file" class="form-control" name="profile_picture" id="id_profile_picture" accept="image/*" style="display: none;">
+                            <button type="button" class="btn btn-outline-primary" onclick="document.getElementById('id_profile_picture').click()">
+                                <i class="fas fa-upload me-2"></i>Choose Photo
+                            </button>
+                            <p class="text-muted mt-2 mb-0">Upload your profile picture (JPG, PNG)</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="{{ form.bio.id_for_label }}" class="form-label fw-semibold">
+                            <i class="fas fa-info-circle me-2 text-primary"></i>Bio
+                        </label>
+                        <textarea class="form-control" name="bio" id="id_bio" rows="3" placeholder="Tell us about yourself...">{{ form.bio.value|default:'' }}</textarea>
+                    </div>
+                    
+                    <div class="d-grid gap-2 mb-4">
+                        <button type="submit" class="btn btn-primary py-3 fw-semibold">
+                            <i class="fas fa-save me-2"></i>Update Profile
+                        </button>
+                    </div>
+                </form>
+                
+                <!-- Change Password Section -->
+                <div class="card glass-effect mt-4">
+                    <div class="card-header border-0 py-3" style="background: var(--warning-gradient); border-radius: 15px 15px 0 0;">
+                        <h5 class="text-white fw-bold mb-0">
+                            <i class="fas fa-lock me-2"></i>Change Password
+                        </h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <form method="post" action="{% url 'password_change' %}">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Current Password</label>
+                                <input type="password" class="form-control" name="old_password" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">New Password</label>
+                                <input type="password" class="form-control" name="new_password1" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Confirm New Password</label>
+                                <input type="password" class="form-control" name="new_password2" required>
+                            </div>
+                            <button type="submit" class="btn btn-warning fw-semibold">
+                                <i class="fas fa-key me-2"></i>Change Password
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.form-control {
+    border-radius: 12px;
+    border: 2px solid rgba(102, 126, 234, 0.2);
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    transform: translateY(-2px);
+}
+
+.upload-area:hover {
+    border-color: #007bff !important;
+    background-color: rgba(0,123,255,0.05) !important;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.btn-warning {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    border: none;
+    color: white;
+}
+</style>
+{% endblock %}

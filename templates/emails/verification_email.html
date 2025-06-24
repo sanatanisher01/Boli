@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Your BoliBazaar Account</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+        .header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        .welcome-text {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        .verify-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: white;
+            text-decoration: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin: 20px 0;
+            transition: transform 0.3s ease;
+        }
+        .verify-btn:hover {
+            transform: translateY(-2px);
+        }
+        .features {
+            background: #f8f9fa;
+            padding: 30px;
+            margin: 30px 0;
+            border-radius: 15px;
+        }
+        .feature {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+        }
+        .feature-icon {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+        }
+        .footer {
+            background: #2c3e50;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .footer p {
+            margin: 5px 0;
+            opacity: 0.8;
+        }
+        .social-links {
+            margin: 20px 0;
+        }
+        .social-links a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 BoliBazaar</h1>
+            <p>Welcome to the Future of Auctions</p>
+        </div>
+        
+        <div class="content">
+            <div class="welcome-text">
+                <h2>Hello {{ user.first_name|default:user.username }}! 👋</h2>
+                <p>Thank you for joining BoliBazaar - the revolutionary voice-powered auction platform!</p>
+            </div>
+            
+            <p>To start your bidding journey and access all features, please verify your email address by clicking the button below:</p>
+            
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="http://{{ domain }}/verify-email/{{ token }}/" class="verify-btn">
+                    ✅ Verify My Account
+                </a>
+            </div>
+            
+            <div class="features">
+                <h3 style="color: #2c3e50; margin-bottom: 20px;">🚀 What awaits you:</h3>
+                
+                <div class="feature">
+                    <div class="feature-icon">🎤</div>
+                    <div>
+                        <strong>Voice Bidding</strong><br>
+                        <small>Place bids using voice commands - "Place a bid of 5000 rupees"</small>
+                    </div>
+                </div>
+                
+                <div class="feature">
+                    <div class="feature-icon">⚡</div>
+                    <div>
+                        <strong>Real-time Updates</strong><br>
+                        <small>Live countdown timers and instant bid notifications</small>
+                    </div>
+                </div>
+                
+                <div class="feature">
+                    <div class="feature-icon">🏆</div>
+                    <div>
+                        <strong>Leaderboards</strong><br>
+                        <small>Track your position among top bidders</small>
+                    </div>
+                </div>
+                
+                <div class="feature">
+                    <div class="feature-icon">📱</div>
+                    <div>
+                        <strong>Mobile Friendly</strong><br>
+                        <small>Bid from anywhere, anytime on any device</small>
+                    </div>
+                </div>
+            </div>
+            
+            <p><strong>Important:</strong> This verification link will expire in 7 days. If you didn't create this account, please ignore this email.</p>
+            
+            <p>Need help? Reply to this email or contact our support team.</p>
+        </div>
+        
+        <div class="footer">
+            <p><strong>BoliBazaar Team</strong></p>
+            <p>The Future of Auctions is Here</p>
+            <div class="social-links">
+                <a href="#">Facebook</a> |
+                <a href="#">Twitter</a> |
+                <a href="#">Instagram</a>
+            </div>
+            <p style="font-size: 0.9rem;">© 2024 BoliBazaar. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

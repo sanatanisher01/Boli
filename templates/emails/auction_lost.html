@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auction Ended - Better Luck Next Time!</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.2rem;
+            font-weight: bold;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        .result-card {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 20px 0;
+            border-left: 5px solid #ffc107;
+        }
+        .auction-details {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        .encouragement {
+            background: #e8f5e8;
+            border: 1px solid #c3e6cb;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+        .browse-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: white;
+            text-decoration: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        .tips {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .footer {
+            background: #2c3e50;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Auction Ended</h1>
+            <p>Thank you for participating!</p>
+        </div>
+        
+        <div class="content">
+            <h2>Hi {{ user.first_name|default:user.username }}, 👋</h2>
+            <p>The auction you participated in has ended. While you didn't win this time, we appreciate your participation!</p>
+            
+            <div class="result-card">
+                <h3 style="color: #856404; margin-top: 0;">📊 Auction Results</h3>
+                <p style="font-size: 1.1rem; margin-bottom: 0;">
+                    Unfortunately, you were outbid in the final moments.
+                </p>
+            </div>
+            
+            <div class="auction-details">
+                <h4 style="color: #2c3e50; margin-top: 0;">📦 Auction Details:</h4>
+                <div class="detail-row">
+                    <strong>Product:</strong>
+                    <span>{{ product.title }}</span>
+                </div>
+                <div class="detail-row">
+                    <strong>Your Highest Bid:</strong>
+                    <span style="color: #007bff; font-weight: bold;">₹{{ user_highest_bid }}</span>
+                </div>
+                <div class="detail-row">
+                    <strong>Winning Bid:</strong>
+                    <span style="color: #28a745; font-weight: bold;">₹{{ winning_bid }}</span>
+                </div>
+                <div class="detail-row">
+                    <strong>Winner:</strong>
+                    <span>{{ winner_name }}</span>
+                </div>
+                <div class="detail-row">
+                    <strong>Auction Ended:</strong>
+                    <span>{{ product.end_time|date:"M d, Y H:i" }}</span>
+                </div>
+            </div>
+            
+            <div class="encouragement">
+                <h4 style="color: #155724; margin-top: 0;">🌟 Don't Give Up!</h4>
+                <p style="color: #155724;">
+                    Every auction is a learning experience. You showed great interest and competitive spirit. 
+                    There are many more exciting auctions waiting for you!
+                </p>
+                <p style="color: #155724; margin-bottom: 0;">
+                    <strong>Remember:</strong> The best bidders learn from each auction and come back stronger.
+                </p>
+            </div>
+            
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="http://localhost:8000/" class="browse-btn">
+                    🔍 Browse New Auctions
+                </a>
+            </div>
+            
+            <div class="tips">
+                <h4 style="color: #856404; margin-top: 0;">💡 Tips for Next Time:</h4>
+                <ul style="color: #856404; margin-bottom: 0;">
+                    <li><strong>Set a Maximum Budget:</strong> Decide your limit before bidding</li>
+                    <li><strong>Watch the Clock:</strong> Many auctions are won in the final minutes</li>
+                    <li><strong>Use Voice Commands:</strong> "Place a bid of X rupees" for faster bidding</li>
+                    <li><strong>Study the Competition:</strong> Check the leaderboard to understand bidding patterns</li>
+                    <li><strong>Stay Alert:</strong> Enable notifications for auctions you're interested in</li>
+                </ul>
+            </div>
+            
+            <div style="background: #d1ecf1; border: 1px solid #bee5eb; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                <h4 style="color: #0c5460; margin-top: 0;">🎯 Keep Bidding!</h4>
+                <p style="color: #0c5460; margin-bottom: 0;">
+                    Your next winning bid is just around the corner. Check out our latest auctions and 
+                    put your bidding skills to the test again!
+                </p>
+            </div>
+            
+            <p style="text-align: center; margin-top: 30px;">
+                <strong>Thank you for being part of BoliBazaar! 🙏</strong>
+            </p>
+        </div>
+        
+        <div class="footer">
+            <p><strong>BoliBazaar Team</strong></p>
+            <p>Better luck next time! 🍀</p>
+            <p style="font-size: 0.9rem;">© 2024 BoliBazaar. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

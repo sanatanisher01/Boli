@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}Login - BoliBazaar{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card border-0 glass-effect">
+            <div class="card-header border-0 text-center py-4" style="background: var(--primary-gradient); border-radius: 20px 20px 0 0;">
+                <div class="mb-3">
+                    <i class="fas fa-sign-in-alt fa-3x text-white"></i>
+                </div>
+                <h3 class="text-white fw-bold mb-0">Welcome Back</h3>
+                <p class="text-white opacity-75 mb-0">Sign in to continue bidding</p>
+            </div>
+            <div class="card-body p-5">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.username.id_for_label }}" class="form-label">Username</label>
+                        <input type="text" class="form-control" name="username" id="id_username" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="id_password" class="form-label">Password</label>
+                        <input type="password" class="form-control" name="password" id="id_password" required>
+                    </div>
+                    
+                    {% if form.errors %}
+                        <div class="alert alert-danger">
+                            {{ form.errors }}
+                        </div>
+                    {% endif %}
+                    
+                    <button type="submit" class="btn btn-primary w-100 py-3 fw-semibold">
+                        <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                    </button>
+                </form>
+                
+                <div class="text-center mt-4">
+                    <p class="text-muted">Don't have an account? 
+                        <a href="{% url 'register' %}" class="text-success fw-semibold text-decoration-none">Register here</a>
+                    </p>
+                    <p class="text-muted">Forgot your password? 
+                        <a href="{% url 'forgot_password' %}" class="text-warning fw-semibold text-decoration-none">Reset it here</a>
+                    </p>
+                </div>
+                
+                <div class="text-center mt-4">
+                    <div class="glass-effect rounded-3 p-3">
+                        <small class="text-muted">
+                            <div class="fw-semibold mb-2">Demo Accounts:</div>
+                            <div><strong>Admin:</strong> admin / admin123</div>
+                            <div><strong>User:</strong> demo / demo123</div>
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

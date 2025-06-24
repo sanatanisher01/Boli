@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Congratulations! You Won!</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+        .celebration {
+            font-size: 4rem;
+            margin: 20px 0;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        .winner-card {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .winning-amount {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .product-details {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        .next-steps {
+            background: #e3f2fd;
+            border: 1px solid #bbdefb;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+        .step {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+        }
+        .step-number {
+            background: #2196f3;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+        }
+        .footer {
+            background: #2c3e50;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="celebration">🏆🎉🏆</div>
+            <h1>CONGRATULATIONS!</h1>
+            <p>You Won the Auction!</p>
+        </div>
+        
+        <div class="content">
+            <div class="winner-card">
+                <h2 style="margin-top: 0;">🎯 AUCTION WINNER</h2>
+                <p style="font-size: 1.2rem; margin: 10px 0;">{{ user.first_name|default:user.username }}</p>
+                <div class="winning-amount">₹{{ winning_bid }}</div>
+                <p style="margin-bottom: 0;">Winning Bid Amount</p>
+            </div>
+            
+            <h3>🎊 Amazing news, {{ user.first_name|default:user.username }}!</h3>
+            <p>You have successfully won the auction! Your strategic bidding has paid off.</p>
+            
+            <div class="product-details">
+                <h4 style="color: #2c3e50; margin-top: 0;">📦 Product Details:</h4>
+                <div class="detail-row">
+                    <strong>Product Name:</strong>
+                    <span>{{ product.title }}</span>
+                </div>
+                <div class="detail-row">
+                    <strong>Your Winning Bid:</strong>
+                    <span style="color: #28a745; font-weight: bold;">₹{{ winning_bid }}</span>
+                </div>
+                <div class="detail-row">
+                    <strong>Auction Ended:</strong>
+                    <span>{{ product.end_time|date:"M d, Y H:i" }}</span>
+                </div>
+                <div class="detail-row">
+                    <strong>Total Bids:</strong>
+                    <span>{{ total_bids }} bids</span>
+                </div>
+            </div>
+            
+            <div class="next-steps">
+                <h4 style="color: #1976d2; margin-top: 0;">📋 Next Steps:</h4>
+                
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div>
+                        <strong>Payment Processing</strong><br>
+                        <small>Our team will contact you within 24 hours for payment details</small>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div>
+                        <strong>Delivery Arrangement</strong><br>
+                        <small>We'll coordinate the delivery of your won item</small>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div>
+                        <strong>Enjoy Your Purchase</strong><br>
+                        <small>Congratulations on your successful bid!</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="background: #d4edda; border: 1px solid #c3e6cb; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                <h4 style="color: #155724; margin-top: 0;">🎯 You're a Winner!</h4>
+                <p style="color: #155724; margin-bottom: 0;">
+                    Thank you for participating in BoliBazaar. Your winning bid shows great strategy and timing. 
+                    We hope you enjoy your new purchase!
+                </p>
+            </div>
+            
+            <div style="text-align: center; margin: 30px 0;">
+                <p><strong>🏆 Share your victory on social media!</strong></p>
+                <p><small>Tag us @BoliBazaar and show off your winning bid!</small></p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p><strong>BoliBazaar Team</strong></p>
+            <p>Congratulations on your victory! 🎉</p>
+            <p style="font-size: 0.9rem;">© 2024 BoliBazaar. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,503 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ product.title }} - BoliBazaar{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="card border-0 overflow-hidden">
+            <div class="position-relative">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.title }}" style="height: 450px; object-fit: cover;">
+                {% else %}
+                    <div class="card-img-top d-flex align-items-center justify-content-center" style="height: 450px; background: var(--primary-gradient);">
+                        <i class="fas fa-image fa-5x text-white opacity-75"></i>
+                    </div>
+                {% endif %}
+                <div class="position-absolute top-0 start-0 m-4">
+                    {% if not product.is_expired %}
+                        <span class="badge bg-success px-3 py-2 rounded-pill fs-6">
+                            <i class="fas fa-bolt me-1"></i>Live Auction
+                        </span>
+                    {% else %}
+                        <span class="badge bg-danger px-3 py-2 rounded-pill fs-6">
+                            <i class="fas fa-times me-1"></i>Ended
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="card-body p-4">
+                <h1 class="card-title display-6 fw-bold mb-3">{{ product.title }}</h1>
+                <p class="card-text fs-5 text-muted mb-4 lh-lg">{{ product.description }}</p>
+                
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <div class="text-center p-3 rounded-3 glass-effect">
+                            <div class="text-muted mb-1">Base Price</div>
+                            <div class="h4 fw-bold text-primary">₹{{ product.base_price }}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center p-3 rounded-3 glass-effect">
+                            <div class="text-muted mb-1">Current Highest Bid</div>
+                            <div class="h4 fw-bold text-success" id="current-bid">₹{{ product.current_highest_bid }}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center p-3 rounded-3 glass-effect">
+                            <div class="text-muted mb-1">Time Remaining</div>
+                            <div class="countdown-timer fw-bold fs-5" data-end-time="{{ product.end_time|date:'c' }}">
+                                Calculating...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Leaderboard Section -->
+        {% if top_bidders %}
+            <div class="card border-0 mt-4">
+                <div class="card-header border-0 text-center py-4" style="background: var(--warning-gradient); border-radius: 20px 20px 0 0;">
+                    <h4 class="text-white fw-bold mb-0">
+                        <i class="fas fa-trophy me-2"></i>Top Bidders Leaderboard
+                    </h4>
+                    <p class="text-white opacity-75 mb-0">Competition rankings</p>
+                </div>
+                <div class="card-body p-4">
+                    {% for bid in top_bidders %}
+                        <div class="d-flex justify-content-between align-items-center p-3 mb-3 rounded-3 glass-effect position-relative">
+                            <div class="d-flex align-items-center">
+                                <div class="me-3">
+                                    {% if forloop.counter == 1 %}
+                                        <div class="badge bg-warning rounded-circle p-2" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;">
+                                            <i class="fas fa-crown text-white"></i>
+                                        </div>
+                                    {% elif forloop.counter == 2 %}
+                                        <div class="badge bg-secondary rounded-circle p-2" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;">
+                                            <i class="fas fa-medal text-white"></i>
+                                        </div>
+                                    {% elif forloop.counter == 3 %}
+                                        <div class="badge bg-info rounded-circle p-2" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;">
+                                            <i class="fas fa-award text-white"></i>
+                                        </div>
+                                    {% else %}
+                                        <div class="badge bg-primary rounded-circle p-2" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;">
+                                            <span class="text-white fw-bold">{{ forloop.counter }}</span>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div>
+                                    <div class="fw-semibold">{{ bid.bidder.get_full_name|default:bid.bidder.username }}</div>
+                                    <small class="text-muted">#{{ forloop.counter }} Position</small>
+                                </div>
+                            </div>
+                            <div class="text-end">
+                                <div class="h5 fw-bold text-success mb-0">₹{{ bid.amount }}</div>
+                                <small class="text-muted">{{ bid.timestamp|timesince }} ago</small>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    
+    <div class="col-lg-4">
+        <!-- Bidding Section -->
+        {% if user.is_authenticated and not product.is_expired %}
+            <div class="card border-0 mb-4">
+                <div class="card-header border-0 text-center py-4" style="background: var(--success-gradient); border-radius: 20px 20px 0 0;">
+                    <h5 class="text-white fw-bold mb-0">
+                        <i class="fas fa-gavel me-2"></i>Place Your Bid
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <form id="bid-form">
+                        {% csrf_token %}
+                        <div class="mb-4">
+                            <label for="bid-amount" class="form-label fw-semibold">Bid Amount (₹)</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-transparent border-end-0">₹</span>
+                                <input type="number" class="form-control border-start-0 ps-0" id="bid-amount" step="0.01" min="{{ product.current_highest_bid|add:1 }}" required placeholder="Enter your bid">
+                            </div>
+                            <div class="form-text mt-2">
+                                <i class="fas fa-info-circle text-primary me-1"></i>
+                                Minimum bid: <span class="fw-semibold text-success">₹{{ product.current_highest_bid|add:1 }}</span>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100 py-3 mb-3 fw-semibold">
+                            <i class="fas fa-hammer me-2"></i>Place Bid Now
+                        </button>
+                    </form>
+                    
+                    <div class="text-center">
+                        <div class="mb-3">
+                            <div class="fw-semibold text-primary mb-2">🎤 Voice Commands Available</div>
+                            <button type="button" class="voice-btn mb-3" id="voice-btn" title="Voice Commands">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <div class="small text-muted lh-lg">
+                                <div>🗣️ "What is the current bid?"</div>
+                                <div>🗣️ "Place a bid of [amount] rupees"</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% elif not user.is_authenticated %}
+            <div class="card border-0 mb-4 glass-effect">
+                <div class="card-body text-center p-4">
+                    <div class="mb-3">
+                        <i class="fas fa-user-lock fa-3x text-primary opacity-75"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">Ready to Bid?</h5>
+                    <p class="text-muted mb-4">Join thousands of bidders and start winning amazing auctions!</p>
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'login' %}" class="btn btn-primary py-3 fw-semibold">
+                            <i class="fas fa-sign-in-alt me-2"></i>Login to Bid
+                        </a>
+                        <a href="{% url 'register' %}" class="btn btn-outline-primary py-2">
+                            <i class="fas fa-user-plus me-2"></i>Create Account
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="card border-0 mb-4">
+                <div class="card-body text-center p-4" style="background: var(--danger-gradient); border-radius: 20px;">
+                    <div class="text-white">
+                        <i class="fas fa-flag-checkered fa-3x mb-3 opacity-75"></i>
+                        <h5 class="fw-bold mb-3">Auction Concluded</h5>
+                        <p class="mb-3">This exciting auction has come to an end.</p>
+                        {% if product.highest_bidder %}
+                            <div class="glass-effect rounded-3 p-3 mt-3">
+                                <div class="fw-bold mb-1">🏆 Winner</div>
+                                <div class="h6">{{ product.highest_bidder.get_full_name|default:product.highest_bidder.username }}</div>
+                                <div class="fw-bold mt-2">💰 Winning Bid</div>
+                                <div class="h5 mb-0">₹{{ product.current_highest_bid }}</div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        
+
+        
+        <!-- Bid History -->
+        <div class="card border-0">
+            <div class="card-header border-0 text-center py-4" style="background: var(--primary-gradient); border-radius: 20px 20px 0 0;">
+                <h5 class="text-white fw-bold mb-0">
+                    <i class="fas fa-history me-2"></i>Bid Activity
+                </h5>
+            </div>
+            <div class="card-body p-4 bid-history">
+                {% if bids %}
+                    {% for bid in bids %}
+                        <div class="d-flex justify-content-between align-items-center p-3 mb-3 rounded-3 glass-effect">
+                            <div class="d-flex align-items-center">
+                                <div class="me-3">
+                                    <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 35px; height: 35px;">
+                                        <i class="fas fa-user text-white"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="fw-semibold">{{ bid.bidder.get_full_name|default:bid.bidder.username }}</div>
+                                    <small class="text-muted">
+                                        <i class="fas fa-clock me-1"></i>{{ bid.timestamp|timesince }} ago
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="text-end">
+                                <div class="h6 fw-bold text-success mb-0">₹{{ bid.amount }}</div>
+                                <small class="text-muted">Bid Amount</small>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-gavel fa-3x text-muted opacity-50 mb-3"></i>
+                        <h6 class="text-muted">No bids yet!</h6>
+                        <p class="text-muted small">Be the first to place a bid on this amazing item.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Voice Status Modal -->
+<div class="modal fade" id="voiceModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 glass-effect">
+            <div class="modal-header border-0 text-center py-4" style="background: var(--secondary-gradient); border-radius: 20px 20px 0 0;">
+                <h5 class="modal-title text-white fw-bold w-100">
+                    <i class="fas fa-microphone me-2"></i>Voice Command Active
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center p-5">
+                <div id="voice-status">
+                    <div class="mb-4">
+                        <div class="voice-btn listening mx-auto">
+                            <i class="fas fa-microphone"></i>
+                        </div>
+                    </div>
+                    <h5 class="fw-bold mb-3">Listening...</h5>
+                    <p class="text-muted">Speak clearly and wait for the response</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let recognition;
+let isListening = false;
+
+// Initialize speech recognition
+if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = 'en-US';
+    
+    recognition.onstart = function() {
+        isListening = true;
+        document.getElementById('voice-btn').classList.add('listening');
+        document.getElementById('voice-status').innerHTML = `
+            <div class="mb-4">
+                <div class="voice-btn listening mx-auto glow">
+                    <i class="fas fa-microphone"></i>
+                </div>
+            </div>
+            <h5 class="fw-bold mb-3 gradient-text">Listening...</h5>
+            <p class="text-muted">Speak clearly and wait for the response</p>
+        `;
+    };
+    
+    recognition.onresult = function(event) {
+        const transcript = event.results[0][0].transcript.toLowerCase();
+        processVoiceCommand(transcript);
+    };
+    
+    recognition.onerror = function(event) {
+        console.error('Speech recognition error:', event.error);
+        document.getElementById('voice-status').innerHTML = `
+            <div class="mb-4">
+                <i class="fas fa-exclamation-triangle fa-4x text-danger shake"></i>
+            </div>
+            <h5 class="fw-bold mb-3 text-danger">Oops! Something went wrong</h5>
+            <p class="text-muted">Error: ${event.error}</p>
+            <button class="btn btn-primary mt-3" onclick="location.reload()">Try Again</button>
+        `;
+    };
+    
+    recognition.onend = function() {
+        isListening = false;
+        document.getElementById('voice-btn').classList.remove('listening');
+        setTimeout(() => {
+            const modal = bootstrap.Modal.getInstance(document.getElementById('voiceModal'));
+            if (modal) modal.hide();
+        }, 2000);
+    };
+}
+
+function processVoiceCommand(transcript) {
+    console.log('Voice command:', transcript);
+    
+    if (transcript.includes('current bid') || transcript.includes('what is the bid')) {
+        getCurrentBidVoice();
+    } else if (transcript.includes('place a bid') || transcript.includes('bid of')) {
+        const amountMatch = transcript.match(/(\d+(?:\.\d+)?)/);
+        if (amountMatch) {
+            const amount = parseFloat(amountMatch[1]);
+            placeBidVoice(amount);
+        } else {
+            speak("I couldn't understand the bid amount. Please try again.");
+        }
+    } else {
+        speak("I didn't understand that command. Try saying 'What is the current bid?' or 'Place a bid of [amount] rupees'");
+    }
+}
+
+function getCurrentBidVoice() {
+    fetch(`/product/{{ product.pk }}/current-bid/`)
+        .then(response => response.json())
+        .then(data => {
+            const message = `The current highest bid for ${data.product_name} is ${data.current_bid} rupees`;
+            speak(message);
+            document.getElementById('voice-status').innerHTML = `
+                <div class="mb-4">
+                    <i class="fas fa-check-circle fa-4x text-success bounce"></i>
+                </div>
+                <h5 class="fw-bold mb-3 text-success">Current Bid Retrieved!</h5>
+                <div class="glass-effect rounded-3 p-3">
+                    <p class="mb-0">${message}</p>
+                </div>
+            `;
+        })
+        .catch(error => {
+            speak("Sorry, I couldn't get the current bid information.");
+        });
+}
+
+function placeBidVoice(amount) {
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    
+    fetch(`/product/{{ product.pk }}/bid/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken
+        },
+        body: JSON.stringify({ amount: amount })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            speak(`Bid of ${amount} rupees placed successfully!`);
+            document.getElementById('current-bid').textContent = `₹${data.new_highest_bid}`;
+            document.getElementById('voice-status').innerHTML = `
+                <div class="mb-4">
+                    <i class="fas fa-trophy fa-4x text-warning bounce"></i>
+                </div>
+                <h5 class="fw-bold mb-3 text-success">Bid Placed Successfully!</h5>
+                <div class="glass-effect rounded-3 p-3">
+                    <p class="mb-2"><strong>Your Bid:</strong> ₹${amount}</p>
+                    <p class="mb-0 text-success">🎉 You're now the highest bidder!</p>
+                </div>
+            `;
+            setTimeout(() => location.reload(), 2000);
+        } else {
+            speak(`Bid failed: ${data.error}`);
+            document.getElementById('voice-status').innerHTML = `
+                <div class="mb-4">
+                    <i class="fas fa-times-circle fa-4x text-danger shake"></i>
+                </div>
+                <h5 class="fw-bold mb-3 text-danger">Bid Failed</h5>
+                <div class="glass-effect rounded-3 p-3">
+                    <p class="mb-0 text-danger">${data.error}</p>
+                </div>
+            `;
+        }
+    })
+    .catch(error => {
+        speak("Sorry, there was an error placing your bid.");
+    });
+}
+
+function speak(text) {
+    if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        speechSynthesis.speak(utterance);
+    }
+}
+
+// Voice button click handler
+document.getElementById('voice-btn')?.addEventListener('click', function() {
+    if (recognition && !isListening) {
+        const modal = new bootstrap.Modal(document.getElementById('voiceModal'));
+        modal.show();
+        recognition.start();
+    }
+});
+
+// Manual bid form submission
+document.getElementById('bid-form')?.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const amount = document.getElementById('bid-amount').value;
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    const submitBtn = this.querySelector('button[type="submit"]');
+    
+    // Show loading state
+    submitBtn.innerHTML = '<span class="loading-spinner me-2"></span>Placing Bid...';
+    submitBtn.disabled = true;
+    
+    fetch(`/product/{{ product.pk }}/bid/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken
+        },
+        body: JSON.stringify({ amount: parseFloat(amount) })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Success notification
+            showNotification('success', data.message);
+            setTimeout(() => location.reload(), 1500);
+        } else {
+            // Error notification
+            showNotification('error', data.error);
+            submitBtn.innerHTML = '<i class="fas fa-hammer me-2"></i>Place Bid Now';
+            submitBtn.disabled = false;
+        }
+    })
+    .catch(error => {
+        showNotification('error', 'Error placing bid. Please try again.');
+        submitBtn.innerHTML = '<i class="fas fa-hammer me-2"></i>Place Bid Now';
+        submitBtn.disabled = false;
+    });
+});
+
+// Notification function
+function showNotification(type, message) {
+    const notification = document.createElement('div');
+    notification.className = `notification alert alert-${type === 'success' ? 'success' : 'danger'} alert-dismissible fade show`;
+    notification.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-triangle'} me-2"></i>
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    document.body.appendChild(notification);
+    
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.remove();
+        }
+    }, 5000);
+}
+
+// Countdown timer
+function updateCountdown() {
+    const element = document.querySelector('.countdown-timer');
+    const endTime = new Date(element.getAttribute('data-end-time'));
+    const now = new Date();
+    const timeLeft = endTime - now;
+    
+    if (timeLeft > 0) {
+        const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+        
+        let display = '';
+        if (days > 0) display += days + 'd ';
+        if (hours > 0) display += hours + 'h ';
+        if (minutes > 0) display += minutes + 'm ';
+        display += seconds + 's';
+        
+        element.textContent = display;
+    } else {
+        element.textContent = 'Auction Ended';
+        element.classList.add('text-danger');
+        // Disable bidding
+        const bidForm = document.getElementById('bid-form');
+        if (bidForm) {
+            bidForm.style.display = 'none';
+        }
+    }
+}
+
+setInterval(updateCountdown, 1000);
+updateCountdown();
+</script>
+{% endblock %}

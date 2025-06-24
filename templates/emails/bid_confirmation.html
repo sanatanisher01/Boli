@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bid Placed Successfully!</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.2rem;
+            font-weight: bold;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        .bid-details {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        .amount {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #28a745;
+        }
+        .status-badge {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            display: inline-block;
+        }
+        .view-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        .footer {
+            background: #2c3e50;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Bid Placed!</h1>
+            <p>Your bid has been successfully submitted</p>
+        </div>
+        
+        <div class="content">
+            <h2>Great news, {{ user.first_name|default:user.username }}! 🎉</h2>
+            <p>Your bid has been placed successfully. Here are the details:</p>
+            
+            <div class="bid-details">
+                <div class="detail-row">
+                    <strong>Product:</strong>
+                    <span>{{ product.title }}</span>
+                </div>
+                <div class="detail-row">
+                    <strong>Your Bid:</strong>
+                    <span class="amount">₹{{ bid_amount }}</span>
+                </div>
+                <div class="detail-row">
+                    <strong>Current Status:</strong>
+                    <span class="status-badge">{% if is_highest %}🏆 Highest Bidder{% else %}⏳ Outbid{% endif %}</span>
+                </div>
+                <div class="detail-row">
+                    <strong>Auction Ends:</strong>
+                    <span>{{ product.end_time|date:"M d, Y H:i" }}</span>
+                </div>
+            </div>
+            
+            {% if is_highest %}
+                <div style="background: #d4edda; border: 1px solid #c3e6cb; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                    <h4 style="color: #155724; margin-top: 0;">🏆 You're Currently Winning!</h4>
+                    <p style="color: #155724; margin-bottom: 0;">
+                        Congratulations! You have the highest bid. Keep an eye on the auction as other bidders might try to outbid you.
+                    </p>
+                </div>
+            {% else %}
+                <div style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                    <h4 style="color: #856404; margin-top: 0;">⚡ You've Been Outbid!</h4>
+                    <p style="color: #856404; margin-bottom: 0;">
+                        Someone has placed a higher bid. Current highest bid is ₹{{ current_highest }}. Place a higher bid to get back in the lead!
+                    </p>
+                </div>
+            {% endif %}
+            
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="http://localhost:8000/product/{{ product.id }}/" class="view-btn">
+                    👀 View Product & Bid Again
+                </a>
+            </div>
+            
+            <p><strong>💡 Pro Tip:</strong> Use voice commands like "Place a bid of {{ bid_amount|add:500 }} rupees" for faster bidding!</p>
+        </div>
+        
+        <div class="footer">
+            <p><strong>BoliBazaar Team</strong></p>
+            <p>Happy Bidding! 🎯</p>
+        </div>
+    </div>
+</body>
+</html>

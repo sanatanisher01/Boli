@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - BoliBazaar{% endblock %}
+
+{% block content %}
+<div class="row mb-5">
+    <div class="col-12 text-center">
+        <div class="mb-4">
+            <div class="d-inline-block p-4 rounded-circle" style="background: var(--primary-gradient);">
+                <i class="fas fa-user fa-3x text-white"></i>
+            </div>
+        </div>
+        <h1 class="display-5 fw-bold mb-3">Welcome Back!</h1>
+        <p class="lead text-muted">{{ user.get_full_name|default:user.username }}, here's your bidding overview</p>
+    </div>
+</div>
+
+<div class="row mb-5 g-4">
+    <div class="col-md-4">
+        <div class="card border-0 stats-card h-100" style="background: var(--primary-gradient);">
+            <div class="card-body text-white p-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2 class="fw-bold mb-1">{{ user_bids.count }}</h2>
+                        <p class="mb-0 opacity-75">Total Bids Placed</p>
+                    </div>
+                    <div class="opacity-75">
+                        <i class="fas fa-gavel fa-3x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card border-0 stats-card h-100" style="background: var(--success-gradient);">
+            <div class="card-body text-white p-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2 class="fw-bold mb-1">{{ user_bids|length|add:0 }}</h2>
+                        <p class="mb-0 opacity-75">Active Bids</p>
+                    </div>
+                    <div class="opacity-75">
+                        <i class="fas fa-clock fa-3x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card border-0 stats-card h-100" style="background: var(--warning-gradient);">
+            <div class="card-body text-white p-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2 class="fw-bold mb-1">0</h2>
+                        <p class="mb-0 opacity-75">Won Auctions</p>
+                    </div>
+                    <div class="opacity-75">
+                        <i class="fas fa-trophy fa-3x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card border-0">
+    <div class="card-header border-0 text-center py-4" style="background: var(--primary-gradient); border-radius: 20px 20px 0 0;">
+        <h4 class="text-white fw-bold mb-0">
+            <i class="fas fa-history me-2"></i>My Bid History
+        </h4>
+    </div>
+    <div class="card-body p-4">
+        {% if user_bids %}
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>My Bid</th>
+                            <th>Current Highest</th>
+                            <th>Status</th>
+                            <th>Bid Time</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for bid in user_bids %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        {% if bid.product.image %}
+                                            <img src="{{ bid.product.image.url }}" alt="{{ bid.product.title }}" 
+                                                 class="rounded me-2" style="width: 50px; height: 50px; object-fit: cover;">
+                                        {% endif %}
+                                        <div>
+                                            <strong>{{ bid.product.title }}</strong>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>₹{{ bid.amount }}</td>
+                                <td>₹{{ bid.product.current_highest_bid }}</td>
+                                <td>
+                                    {% if bid.product.is_expired %}
+                                        {% if bid.amount == bid.product.current_highest_bid %}
+                                            <span class="badge bg-success">Won</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">Lost</span>
+                                        {% endif %}
+                                    {% else %}
+                                        {% if bid.amount == bid.product.current_highest_bid %}
+                                            <span class="badge bg-primary">Leading</span>
+                                        {% else %}
+                                            <span class="badge bg-warning">Outbid</span>
+                                        {% endif %}
+                                    {% endif %}
+                                </td>
+                                <td>{{ bid.timestamp|timesince }} ago</td>
+                                <td>
+                                    <a href="{% url 'product_detail' bid.product.pk %}" class="btn btn-sm btn-outline-primary">
+                                        View Product
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="text-center py-5">
+                <div class="mb-4">
+                    <i class="fas fa-search fa-4x text-primary opacity-50"></i>
+                </div>
+                <h5 class="fw-bold mb-3">No Bids Yet</h5>
+                <p class="text-muted mb-4">Ready to start your bidding journey? Explore amazing auctions waiting for you!</p>
+                <a href="{% url 'home' %}" class="btn btn-primary px-4 py-3 fw-semibold">
+                    <i class="fas fa-rocket me-2"></i>Start Bidding
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
