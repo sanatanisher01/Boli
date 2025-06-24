@@ -55,12 +55,22 @@ WSGI_APPLICATION = 'bolibazaar.wsgi.application'
 import os
 import dj_database_url
 
+# Configure database based on environment
 DATABASES = {
     'default': dj_database_url.config(
         default='sqlite:///' + str(BASE_DIR / 'db.sqlite3'),
         conn_max_age=600
     )
 }
+
+# Use SQLite for local development if DATABASE_URL is not set
+if 'DATABASE_URL' not in os.environ:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
