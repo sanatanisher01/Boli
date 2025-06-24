@@ -1,6 +1,7 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
 from . import views
+from .api_views import verify_user, get_active_bids, get_auction_details, place_bid, get_bid_history, get_auction_status
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -24,6 +25,14 @@ urlpatterns = [
     path('forgot-password/', views.forgot_password, name='forgot_password'),
     path('reset-password/<uuid:token>/', views.reset_password, name='reset_password'),
     path('password-change/', auth_views.PasswordChangeView.as_view(success_url='/profile/'), name='password_change'),
+    
+    # API endpoints for OmniDimension
+    path('api/users/verify/', verify_user, name='api_verify_user'),
+    path('api/bids/active/', get_active_bids, name='api_active_bids'),
+    path('api/auctions/details/', get_auction_details, name='api_auction_details'),
+    path('api/bids/place/', place_bid, name='api_place_bid'),
+    path('api/bids/history/', get_bid_history, name='api_bid_history'),
+    path('api/auctions/status/', get_auction_status, name='api_auction_status'),
     
 
 ]

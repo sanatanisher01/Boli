@@ -123,6 +123,9 @@ DEFAULT_FROM_EMAIL = 'BoliBazaar <sanatanisofindia@gmail.com>'
 # Site URL for emails
 SITE_URL = 'https://bolibazaar.onrender.com'
 
+# OmniDimension API Key
+OMNIDIMENSION_API_KEY = 'P-rBV6jy7fmjIzrFHzMcx_IuWq0cVZsm5NV-CRCfews'
+
 # Account activation
 ACCOUNT_ACTIVATION_DAYS = 7
 

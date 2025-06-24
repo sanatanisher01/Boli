@@ -6,3 +6,4 @@ django-cloudinary-storage==0.3.0
 gunicorn==22.0.0
 whitenoise==6.7.0
 psycopg==3.2.9
+omnidimension==1.0.0

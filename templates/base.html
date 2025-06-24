@@ -442,6 +442,131 @@
             border: 1px solid var(--glass-border);
         }
         
+        /* Chat Widget Styles */
+        .chat-widget {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .chat-toggle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+            font-size: 1.5rem;
+        }
+        
+        .chat-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 25px rgba(102, 126, 234, 0.6);
+        }
+        
+        .chat-container {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 350px;
+            height: 500px;
+            background: var(--card-gradient);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            border: 1px solid var(--glass-border);
+        }
+        
+        .chat-container.active {
+            display: flex;
+            animation: slideUp 0.3s ease;
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .chat-header {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .chat-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .chat-close {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 5px;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+        
+        .chat-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: var(--card-gradient);
+        }
+        
+        .message {
+            margin-bottom: 15px;
+            display: flex;
+        }
+        
+        .user-message {
+            justify-content: flex-end;
+        }
+        
+        .bot-message {
+            justify-content: flex-start;
+        }
+        
+        .message-content {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            white-space: pre-line;
+        }
+        
+        .user-message .message-content {
+            background: var(--primary-gradient);
+            color: white;
+            border-bottom-right-radius: 6px;
+        }
+        
+        .bot-message .message-content {
+            background: var(--glass-bg);
+            color: #333;
+            border-bottom-left-radius: 6px;
+            border: 1px solid var(--glass-border);
+        }
+        
         @media (max-width: 768px) {
             .navbar-brand {
                 font-size: 1.4rem;
@@ -451,10 +576,15 @@
                 padding: 10px 20px;
             }
             
-            .voice-btn {
-                width: 60px;
-                height: 60px;
-                font-size: 1.5rem;
+            .chat-container {
+                width: 300px;
+                height: 450px;
+            }
+            
+            .chat-toggle {
+                width: 55px;
+                height: 55px;
+                font-size: 1.3rem;
             }
         }
     </style>
@@ -653,6 +783,166 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{% static 'js/main.js' %}"></script>
+    
+    <!-- BoliBazaar Chat Widget -->
+    <div id="bolibazaar-chat-widget" class="chat-widget">
+        <div id="chat-toggle" class="chat-toggle">
+            <i class="fas fa-comments"></i>
+        </div>
+        <div id="chat-container" class="chat-container">
+            <div class="chat-header">
+                <div class="chat-title">
+                    <i class="fas fa-gavel me-2"></i>
+                    BoliBazaar Assistant
+                </div>
+                <button id="chat-close" class="chat-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="chat-messages" class="chat-messages">
+                <div class="message bot-message">
+                    <div class="message-content">
+                        Welcome to BoliBazaar! I'm your bidding assistant. Please provide your 6-digit unique ID to get started.
+                    </div>
+                </div>
+            </div>
+            <div class="chat-input-container">
+                <input type="text" id="chat-input" placeholder="Type your message..." maxlength="500">
+                <button id="chat-send">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Chat Widget Functionality
+        class BoliBazaarChat {
+            constructor() {
+                this.isOpen = false;
+                this.sessionId = null;
+                this.userId = null;
+                this.authenticated = false;
+                this.init();
+            }
+            
+            init() {
+                this.chatToggle = document.getElementById('chat-toggle');
+                this.chatContainer = document.getElementById('chat-container');
+                this.chatClose = document.getElementById('chat-close');
+                this.chatInput = document.getElementById('chat-input');
+                this.chatSend = document.getElementById('chat-send');
+                this.chatMessages = document.getElementById('chat-messages');
+                
+                this.bindEvents();
+                this.sessionId = 'session_' + Math.random().toString(36).substr(2, 9);
+            }
+            
+            bindEvents() {
+                this.chatToggle.addEventListener('click', () => this.toggleChat());
+                this.chatClose.addEventListener('click', () => this.closeChat());
+                this.chatSend.addEventListener('click', () => this.sendMessage());
+                this.chatInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') this.sendMessage();
+                });
+            }
+            
+            toggleChat() {
+                this.isOpen = !this.isOpen;
+                this.chatContainer.classList.toggle('active', this.isOpen);
+                if (this.isOpen) {
+                    this.chatInput.focus();
+                }
+            }
+            
+            closeChat() {
+                this.isOpen = false;
+                this.chatContainer.classList.remove('active');
+            }
+            
+            sendMessage() {
+                const message = this.chatInput.value.trim();
+                if (!message) return;
+                
+                this.addMessage(message, 'user');
+                this.chatInput.value = '';
+                
+                // Process message
+                this.processMessage(message);
+            }
+            
+            addMessage(content, type) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${type}-message`;
+                messageDiv.innerHTML = `<div class="message-content">${content}</div>`;
+                
+                this.chatMessages.appendChild(messageDiv);
+                this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
+            }
+            
+            processMessage(message) {
+                // Show typing indicator
+                this.showTyping();
+                
+                // Simulate API call to OmniDimension
+                setTimeout(() => {
+                    this.hideTyping();
+                    this.handleResponse(message);
+                }, 1500);
+            }
+            
+            handleResponse(message) {
+                const msgLower = message.toLowerCase();
+                
+                // Check for unique ID
+                const idMatch = message.match(/\b\d{6}\b/);
+                if (idMatch && !this.authenticated) {
+                    this.userId = idMatch[0];
+                    this.authenticated = true;
+                    this.addMessage(`Great! I've verified your User ID: ${this.userId}. Now I can help you with:\n\n• Check your active bids\n• View auction details\n• Place new bids\n• Check bidding history\n• Get real-time auction updates\n\nWhat would you like to do?`, 'bot');
+                    return;
+                }
+                
+                if (!this.authenticated) {
+                    this.addMessage('Please provide your 6-digit unique ID first. You can find it in your profile page.', 'bot');
+                    return;
+                }
+                
+                // Handle authenticated requests
+                if (msgLower.includes('active') || msgLower.includes('bid')) {
+                    this.addMessage(`Here are your active bids:\n\n🏆 Auction #1 - Vintage Watch\n   Your Bid: $1,250\n   Status: Winning\n   Time Left: 2h 15m\n\n📱 Auction #2 - Smartphone\n   Your Bid: $450\n   Status: Outbid ($520)\n   Time Left: 45m\n\nWould you like to place a higher bid?`, 'bot');
+                } else if (msgLower.includes('place') || msgLower.includes('new bid')) {
+                    this.addMessage('I can help you place a new bid! Please tell me:\n\n1. Which auction (ID or item name)\n2. Your bid amount\n\nExample: "Place $500 bid on auction 1"', 'bot');
+                } else if (msgLower.includes('history')) {
+                    this.addMessage(`Your recent bidding activity:\n\n• Dec 20 - Auction #1: $1,250 (Active)\n• Dec 19 - Auction #2: $450 (Outbid)\n• Dec 18 - Auction #3: $800 (Won)\n• Dec 17 - Auction #4: $300 (Lost)\n\nTotal Active: 2 | Win Rate: 50%`, 'bot');
+                } else if (msgLower.includes('help')) {
+                    this.addMessage('I can help you with:\n\n🔍 Check Active Bids\n💰 Place New Bids\n📊 View Bid History\n⏰ Check Time Remaining\n🏆 Get Auction Details\n\nJust tell me what you\'d like to do!', 'bot');
+                } else {
+                    this.addMessage('I can help you with your bidding activities! Try asking:\n\n• "Show my active bids"\n• "Place a new bid"\n• "Check bid history"\n• "Help"\n\nWhat would you like to know?', 'bot');
+                }
+            }
+            
+            showTyping() {
+                const typingDiv = document.createElement('div');
+                typingDiv.className = 'message bot-message typing';
+                typingDiv.innerHTML = '<div class="message-content"><div class="typing-dots"><span></span><span></span><span></span></div></div>';
+                typingDiv.id = 'typing-indicator';
+                
+                this.chatMessages.appendChild(typingDiv);
+                this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
+            }
+            
+            hideTyping() {
+                const typing = document.getElementById('typing-indicator');
+                if (typing) typing.remove();
+            }
+        }
+        
+        // Initialize chat when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            new BoliBazaarChat();
+        });
+    </script>
 
     <script>
         function toggleTheme() {
