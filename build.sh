@@ -16,3 +16,6 @@ python manage.py collectstatic --no-input
 
 # Run migrations
 python manage.py migrate
+
+# Create admin user
+python create_admin.py
