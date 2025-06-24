@@ -25,22 +25,5 @@ urlpatterns = [
     path('reset-password/<uuid:token>/', views.reset_password, name='reset_password'),
     path('password-change/', auth_views.PasswordChangeView.as_view(success_url='/profile/'), name='password_change'),
     
-    # OmniDimension API endpoints
-    path('api/active-auctions/', views.api_active_auctions, name='api_active_auctions'),
-    path('api/product/<int:pk>/status/', views.api_product_status, name='api_product_status'),
-    path('api/product/<int:pk>/time-remaining/', views.api_time_remaining, name='api_time_remaining'),
-    path('api/product/<int:pk>/bid-history/', views.api_bid_history, name='api_bid_history'),
-    path('api/search-product/', views.api_search_product, name='api_search_product'),
-    path('api/omnidimension-webhook/', views.omnidimension_webhook, name='omnidimension_webhook'),
-    
-    # OmniDimension Voice Agent APIs
-    path('api/voice/navigate/', views.voice_navigate, name='voice_navigate'),
-    path('api/voice/authenticate/', views.voice_authenticate, name='voice_authenticate'),
-    path('api/voice/product-search/', views.voice_product_search, name='voice_product_search'),
-    path('api/voice/place-bid/', views.voice_place_bid, name='voice_place_bid'),
-    path('api/voice/get-bid-info/', views.voice_get_bid_info, name='voice_get_bid_info'),
-    path('api/voice/admin-action/', views.voice_admin_action, name='voice_admin_action'),
-    path('api/voice/form-action/', views.voice_form_action, name='voice_form_action'),
-    path('api/voice/theme-toggle/', views.voice_theme_toggle, name='voice_theme_toggle'),
-    path('api/voice/help/', views.voice_help, name='voice_help'),
+
 ]

@@ -1,59 +1,25 @@
-# 🏆 BoliBazaar - Voice-Powered Auction Platform
+# 🏆 BoliBazaar - Online Auction Platform
 
-## 🎤 OmniDimension Integration Winner
-
-**BoliBazaar** is a revolutionary voice-controlled auction platform powered by **OmniDimension AI**, featuring real-time bidding, voice navigation, and complete auction management.
+**BoliBazaar** is a modern online auction platform featuring real-time bidding, user management, and complete auction administration.
 
 ## ✨ Features
 
 ### 🎯 Core Functionality
-- **Real-time Voice Bidding** - Place bids using voice commands
-- **Live Auction Participation** - Real-time bid updates and notifications
-- **Voice Navigation** - Complete website control through voice
-- **Smart Authentication** - Voice-powered login and registration
-
-### 🤖 OmniDimension Integration
-- **9 Voice API Endpoints** - Complete voice control system
-- **Natural Language Processing** - Understands conversational commands
-- **Real-time Responses** - Instant voice feedback and actions
-- **Context Awareness** - Knows current page and user state
+- **Real-time Bidding** - Live auction participation with instant updates
+- **User Authentication** - Secure registration and login system
+- **Email Verification** - Account verification with unique ID generation
+- **Profile Management** - Complete user profile customization
 
 ### 🚀 Advanced Features
 - **Cloudinary Image Storage** - Scalable cloud-based media management
 - **Email Notifications** - Bid confirmations, auction updates, win/loss alerts
-- **Admin Voice Commands** - Voice-controlled product management
+- **Admin Dashboard** - Complete auction and user management
 - **Mobile Responsive** - Works perfectly on all devices
-- **Dark/Light Theme** - Voice-controlled theme switching
-
-## 🎤 Voice Commands
-
-### Navigation
-- "Go to home page"
-- "Show my dashboard" 
-- "Open admin panel"
-- "Go to my profile"
-
-### Bidding
-- "Place bid of 5000 rupees"
-- "What's the current bid?"
-- "Show bid history"
-- "List all auctions"
-
-### Authentication
-- "Login as demo user"
-- "Login as admin"
-- "Register new account"
-- "Logout"
-
-### Admin Functions
-- "Add new product"
-- "Generate report"
-- "Manage products"
+- **PostgreSQL Database** - Reliable data persistence
 
 ## 🛠️ Tech Stack
 
 - **Backend**: Django 4.2.7
-- **Voice AI**: OmniDimension API
 - **Database**: PostgreSQL (Production) / SQLite (Development)
 - **Image Storage**: Cloudinary
 - **Deployment**: Render
@@ -63,19 +29,11 @@
 ## 🚀 Live Demo
 
 - **Website**: [Your Render URL]
-- **Voice Agent**: Click the robot icon (🤖) bottom-right
-- **Demo Login**: admin/admin123 or demo/demo123
+- **Demo Login**: demo/demo123
 
 ## 📱 Quick Start
 
-### Voice Commands Demo
-1. Click the **🤖 robot icon** (bottom-right corner)
-2. Click **microphone button** to start listening
-3. Say: **"List auctions"** or **"Help"**
-4. Try: **"Place bid of 1000 rupees"** on any product page
-
 ### Test Accounts
-- **Admin**: username: `admin`, password: `admin123`
 - **Demo User**: username: `demo`, password: `demo123`
 
 ## 🏗️ Installation
@@ -115,15 +73,15 @@ CLOUDINARY_API_KEY=99999999999999
 CLOUDINARY_API_SECRET=8888888888888
 ```
 
-## 🏆 Hackathon Achievement
+## 🏆 Key Features
 
-**BoliBazaar** showcases the complete potential of **OmniDimension** for real-world applications:
+**BoliBazaar** is a complete auction platform with:
 
-- ✅ **Complete Voice Control** - Every website function accessible via voice
-- ✅ **Real-time Integration** - Live auction participation through voice
+- ✅ **Real-time Bidding** - Live auction participation
+- ✅ **User Management** - Complete registration and profile system
 - ✅ **Production Ready** - Scalable, secure, and deployable
-- ✅ **User Experience** - Intuitive voice interactions with visual feedback
-- ✅ **Innovation** - First voice-controlled auction platform
+- ✅ **Admin Dashboard** - Complete auction management
+- ✅ **Email System** - Automated notifications and verification
 
 ## 📞 Contact
 
@@ -137,4 +95,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**🎤 Experience the future of auctions with voice-powered technology! 🚀**#
+**🏆 Experience the future of online auctions! 🚀**
