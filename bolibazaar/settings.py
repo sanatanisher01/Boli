@@ -54,13 +54,28 @@ WSGI_APPLICATION = 'bolibazaar.wsgi.application'
 
 import os
 
-# Always use SQLite for simplicity
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+# Database configuration
+# Use PostgreSQL in production, SQLite in development
+if 'RENDER' in os.environ:
+    # Production database (PostgreSQL)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'bolibazaar',
+            'USER': 'bolibazaar_user',
+            'PASSWORD': 'PUJXzqq6jS20SoU5uFO8VrLaqhd7Ja2d',
+            'HOST': 'dpg-d1cgqaeuk2gs73an89jg-a',
+            'PORT': '5432',
+        }
     }
-}
+else:
+    # Development database (SQLite)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
